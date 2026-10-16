@@ -1,0 +1,402 @@
+/*
+ * EvacTech visual alignment layer (standalone demonstration).
+ * Derived from the design tokens and Staff/City Admin styles in the uploaded
+ * EvacTech source archive (October 14, 2026). Does not load Laravel/Tailwind.
+ *
+ * The Public Sans and IBM Plex Mono webfont stylesheet is optional: when this
+ * file is viewed offline, installed fonts or system fallbacks are used.
+ * The demo's calculations/CSV controls do not depend on external resources.
+ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  /* Exact light-theme values in resources/css/app.css. */
+  --color-bg: #ffffff;
+  --color-surface: #f1f5f9;
+  --color-surface-alt: #e2e8f0;
+  --color-border: #cbd5e1;
+  --color-ink: #0f172a;
+  --color-ink-soft: #475569;
+  --color-ink-muted: #64748b;
+  --color-primary-50: #ecfeff;
+  --color-primary-100: #cffafe;
+  --color-primary-600: #0891b2;
+  --color-primary-700: #0e7490;
+  --color-primary-800: #155e75;
+  --color-primary: #0e7490;
+  --color-primary-hover: #0891b2;
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+  --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Map legacy CSS of this standalone mock to EvacTech's real tokens. */
+  --bg: var(--color-bg);
+  --surface: var(--color-bg);
+  --soft: var(--color-surface);
+  --ink: var(--color-ink);
+  --text: var(--color-ink-soft);
+  --muted: var(--color-ink-muted);
+  --line: var(--color-border);
+  --line-light: var(--color-surface-alt);
+  --teal: var(--color-primary);
+  --teal-dark: var(--color-primary-700);
+  --teal-light: var(--color-primary-50);
+  --sky: var(--color-primary-600);
+  --nav-active: var(--color-primary);
+  --amber: var(--color-warning);
+  --amber-bg: var(--color-warning-bg);
+  --pink: #be185d;
+  --green: var(--color-success);
+  --radius: 16px;
+  --sidebar-width: 300px;
+  --shadow: 0 1px 2px rgba(15,23,42,.06);
+}
+
+/* EvacTech's 17px root scale; all text remains browser zoom-responsive. */
+html { font-size: 106.25%; }
+body {
+  color: var(--color-ink);
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font-family: var(--font-sans); }
+button { min-height: 44px; }
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 3px;
+}
+
+/* Shell and sidebar: proportions, colors, nav emphasis and brand treatment. */
+.sidebar {
+  border-right-color: var(--color-border);
+  padding: 17px 0;
+  background: var(--color-bg);
+}
+.brand { padding: 9px 25px 18px; gap: 8px; border-bottom: 0; }
+.brand-mark {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+  font-size: 20px;
+  line-height: 1;
+}
+.brand-name {
+  font-size: 1.1875rem;
+  letter-spacing: 0;
+  font-weight: 700;
+  color: var(--color-primary-700);
+}
+.brand-name span { color: var(--color-ink); }
+.user-meta {
+  padding: 13px 25px;
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-ink-muted);
+  font-size: .8125rem;
+  line-height: 1.4;
+}
+.user-meta b { color: var(--color-ink); font-size: 1rem; font-weight: 600; }
+.demo-flag {
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-100);
+  font-size: .66rem;
+  letter-spacing: .01em;
+}
+.sidebar-nav { gap: 4px; padding: 17px 13px; }
+.nav-link {
+  color: var(--color-ink-soft);
+  min-height: 44px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  gap: 12px;
+  font-weight: 500;
+}
+.nav-link span { font-size: .9375rem; }
+.nav-link svg { width: 22px; height: 22px; }
+.nav-link:hover { background: var(--color-surface); }
+.nav-link.active,
+.nav-link.active:hover { background: var(--color-primary); color: #fff; }
+.sidebar-foot {
+  color: var(--color-ink-muted);
+  border-top-color: var(--color-border);
+  padding: 17px 25px;
+  font-size: .7rem;
+}
+.content { max-width: none; padding: 34px clamp(28px, 3.5vw, 80px) 65px; }
+.eyebrow {
+  color: var(--color-ink-muted);
+  font-size: .8125rem;
+  letter-spacing: .025em;
+  font-weight: 700;
+}
+.page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--color-ink);
+}
+.subtitle { font-size: 1.1875rem; line-height: 1.5; color: var(--color-ink-soft); }
+
+/* Cards and content regions. White surfaces and 1px slate borders. */
+.controls, .panel, .mini-panel, .soft-panel, .stat-card,
+.category-card, .recipe-panel, .shelter-profile {
+  background: var(--color-bg);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow);
+  border-radius: 16px;
+}
+.stat-card { padding: 20px 17px; gap: 14px; min-height: 132px; }
+.stat-icon {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+.stat-label, .category-name { color: var(--color-ink-soft); font-size: .875rem; font-weight: 600; }
+.stat-value, .category-value, .profile-count strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.035em;
+  color: var(--color-ink);
+}
+.stat-hint, .category-hint, .panel-header p, .foot-note {
+  color: var(--color-ink-muted);
+  font-size: .8125rem;
+}
+.panel-header { padding: 22px 25px; }
+.panel-header h2 { font-size: 1.1875rem; font-weight: 600; color: var(--color-ink); }
+.section-title, .mini-panel h3, .recipe-panel h3 { font-weight: 600; color: var(--color-ink); }
+.mini-panel p { font-size: .875rem; color: var(--color-ink-soft); }
+.panel-footer { border-top: 1px solid var(--color-border); color: var(--color-ink-muted); }
+
+/* Forms and buttons match EvacTech's min 44px interaction target. */
+.btn {
+  min-height: 44px;
+  padding: 10px 16px;
+  background: var(--color-bg);
+  color: var(--color-primary-700);
+  border: 1px solid var(--color-primary-600);
+  border-radius: 10px;
+  font-size: .9375rem;
+  font-weight: 600;
+  box-shadow: none;
+}
+.btn:hover { background: var(--color-primary-50); border-color: var(--color-primary-700); }
+.btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.btn.primary:hover { background: var(--color-primary-hover); }
+.btn.subtle { color: var(--color-primary-700); border-color: var(--color-border); }
+.btn.sm { min-height: 44px; padding: 9px 13px; font-size: .8125rem; }
+.btn.icon-only { min-width: 44px; }
+.select, input[type=search], input[type=number] {
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  font-size: .9375rem;
+}
+.field-name { color: var(--color-ink-soft); font-size: .875rem; font-weight: 600; }
+.inline-note { color: var(--color-ink-muted); font-size: .8125rem; }
+.segmented { background: var(--color-surface); border-color: var(--color-border); }
+.segment { min-height: 44px; color: var(--color-ink-soft); font-size: .8125rem; font-weight: 600; }
+.segment.selected { background: var(--color-primary); color: #fff; box-shadow: none; }
+.notice { color: var(--color-primary-700); font-size: .875rem; }
+.meta-pill { background: var(--color-warning-bg); color: var(--color-warning); border-color: #fcd34d; }
+
+/* Tabular layout from EvacTech's .data-table rather than mock blue rows. */
+.table th {
+  color: var(--color-ink-soft);
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
+  font-size: .875rem;
+  font-weight: 600;
+  padding: 14px 15px;
+}
+.table td {
+  color: var(--color-ink-soft);
+  font-size: .9375rem;
+  padding: 15px;
+  border-bottom: 1px solid var(--color-border);
+  overflow-wrap: anywhere;
+}
+.table tbody tr:hover { background: var(--color-surface); }
+.table .name-cell, .table .number, .table .needed { color: var(--color-ink); }
+.table .number, .table .accent-number, .profile-count strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.table .number { font-size: .9375rem; font-weight: 600; }
+.table .accent-number { font-size: 1rem; font-weight: 600; color: var(--color-primary-700); }
+.table .no-wrap { white-space: nowrap; }
+.wide-panel .table { min-width: 1190px; }
+.wide-panel .table th { background: var(--color-surface); color: var(--color-ink-soft); }
+.wide-panel .table td { color: var(--color-ink-soft); font-size: .875rem; }
+.wide-panel .table td:first-child { color: var(--color-ink); }
+.wide-panel .table tbody tr:nth-child(even), .special-table tbody tr:nth-child(even) {
+  background: var(--color-bg);
+}
+.wide-panel .table tbody tr:hover, .special-table tbody tr:hover { background: var(--color-surface); }
+.wide-panel .table .row-explain { background: var(--color-primary-50) !important; }
+.table .inline-link { min-height: 44px; min-width: 44px; color: var(--color-primary-700); }
+.pagebtn.current { background: var(--color-primary); color: #fff; }
+
+/* Vulnerability projections use EvacTech's semantic backgrounds. */
+.shelter-profile { border: 2px solid var(--color-primary-600); }
+.profile-count { border-left-color: var(--color-border); }
+.profile-count small { color: var(--color-ink-muted); }
+.profile-count strong { color: var(--color-primary-700); }
+.shelter-location, .smallcaps, .section-head h2 { color: var(--color-ink-soft); }
+.section-head h2 { font-weight: 600; }
+.pill, .resource-tag {
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-100);
+}
+.pill.amber, .badge-verify { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge-pending { background: var(--color-surface); color: var(--color-ink-soft); }
+.pill.grey { background: var(--color-surface); color: var(--color-ink-soft); }
+.pill.pink { background: #fdf2f8; color: #be185d; }
+.category-card.is-selected, .category-card:hover {
+  border-color: var(--color-primary-600);
+  box-shadow: inset 0 0 0 1px var(--color-primary-600);
+}
+.category-icon.pink { background: #fdf2f8; color: #be185d; }
+.category-icon.orange { background: var(--color-warning-bg); color: var(--color-warning); }
+.category-icon.green { background: var(--color-success-bg); color: var(--color-success); }
+.category-icon.purple { background: #eef2ff; color: #4338ca; }
+.category-name { font-size: .875rem; }
+.special-title h2 { color: var(--color-ink); font-weight: 700; }
+.switcher, .category-tabs { border-color: var(--color-border); }
+.switcher button, .category-tabs button { color: var(--color-ink-soft); font-weight: 500; }
+.switcher button.selected, .category-tabs button.selected {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-weight: 700;
+}
+.household-row.active { background: var(--color-primary-50) !important; }
+.rec-card { background: var(--color-surface); }
+.rec-card strong { color: var(--color-ink); }
+.rec-card em { color: var(--color-primary-700); }
+.recommendation-name { background: var(--color-primary-50); color: var(--color-primary-700); }
+.info-box { background: var(--color-primary-50); border-color: var(--color-primary-100); color: var(--color-primary-800); }
+.recipe-panel { background: var(--color-surface); }
+.recipe-contents span { color: var(--color-ink-soft); border-color: var(--color-border); }
+.modal { border-radius: 16px; }
+.modal-head, .modal-footer { border-color: var(--color-border); }
+.rule-line { border-color: var(--color-border); }
+.toast { background: var(--color-primary-800); }
+
+@media (max-width: 1050px) {
+  :root { --sidebar-width: 84px; }
+  .sidebar { padding: 13px 8px; }
+  .brand { padding: 8px 4px 16px; }
+  .sidebar-nav { padding: 21px 0; }
+  .nav-link { padding: 12px 4px; }
+  .content { padding: 28px 26px 55px; }
+}
+@media (max-width: 670px) {
+  :root { --sidebar-width: 0px; }
+  .sidebar { padding: 10px 15px; border-bottom: 1px solid var(--color-border); }
+  .brand { padding: 0; }
+  .brand-name { font-size: 1.08rem; }
+  .sidebar-nav { padding: 0; }
+  .nav-link.active { min-height: 44px; padding: 8px 12px; }
+  .content { padding: 21px 15px 48px; }
+  .page-title { font-size: 1.5rem; }
+  .subtitle { font-size: .9375rem; }
+  .stat-card { min-height: 135px; }
+  .stat-value, .category-value { font-size: 1.45rem; }
+  .stat-label, .category-name { font-size: .79rem; }
+  .stat-hint, .category-hint { font-size: .7rem; }
+  .btn { min-height: 44px; }
+  .table { min-width: 850px; }
+  .wide-panel .table { min-width: 1190px; }
+  .panel-header { padding: 19px 15px; }
+  .profile-count strong { font-size: 1.25rem; }
+  .category-card { min-height: 148px; }
+  .segment { min-height: 44px; }
+}
+
+/* The city overview table stays readable without losing its action column. */
+@media (min-width: 768px) {
+  .overview-table { min-width: 900px; table-layout: fixed; }
+  .overview-table th, .overview-table td { padding-inline: 10px; }
+  .overview-table th:nth-child(1) { width: 13%; }
+  .overview-table th:nth-child(2) { width: 23%; }
+  .overview-table th:nth-child(3) { width: 9%; }
+  .overview-table th:nth-child(4) { width: 12%; }
+  .overview-table th:nth-child(5) { width: 15%; }
+  .overview-table th:nth-child(6) { width: 12%; }
+  .overview-table th:nth-child(7) { width: 16%; }
+  .overview-table .action-cell { text-align: center; }
+  .overview-table .action-cell button { padding-inline: 8px; }
+}
+
+/* EvacTech-style opt-in responsive stacked rows, only for the shelter index.
+   Keep its real column headings available to screen readers; each mobile cell
+   also gets a visible data-label. Detailed breakdown retains table scroll. */
+@media (max-width: 767px) {
+  .overview-table-wrap { overflow: visible; padding: 0 12px 10px; }
+  .overview-table { min-width: 0; width: 100%; display: block; }
+  .overview-table thead {
+    position: absolute;
+    width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;
+    border: 0;
+  }
+  .overview-table tbody { display: grid; gap: 11px; }
+  .overview-table tbody tr {
+    display: block;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .overview-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 12px;
+    text-align: right;
+    font-size: .875rem;
+    border-bottom: 1px solid var(--color-surface-alt);
+  }
+  .overview-table tbody td:last-child { border-bottom: 0; }
+  .overview-table tbody td::before {
+    content: attr(data-label);
+    flex: 0 0 44%;
+    text-align: left;
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+  .overview-table tbody td.name-cell { color: var(--color-ink); }
+  .overview-table tbody td.number { font-size: .9375rem; }
+  .overview-table tbody td.action-cell { align-items: center; }
+  .overview-table tbody td.empty { display: block; text-align: center; }
+  .overview-table tbody td.empty::before { content: none; }
+}
